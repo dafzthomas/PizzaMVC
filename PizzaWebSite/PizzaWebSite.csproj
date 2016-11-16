@@ -205,6 +205,14 @@
     <Compile Include="Migrations\201611161213290_MakeDatabase.Designer.cs">
       <DependentUpon>201611161213290_MakeDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611161510293_UserAddress.cs" />
+    <Compile Include="Migrations\201611161510293_UserAddress.Designer.cs">
+      <DependentUpon>201611161510293_UserAddress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611161521374_UserOrders.cs" />
+    <Compile Include="Migrations\201611161521374_UserOrders.Designer.cs">
+      <DependentUpon>201611161521374_UserOrders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -275,6 +283,7 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\ViewTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -290,6 +299,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611161213290_MakeDatabase.resx">
       <DependentUpon>201611161213290_MakeDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611161510293_UserAddress.resx">
+      <DependentUpon>201611161510293_UserAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611161521374_UserOrders.resx">
+      <DependentUpon>201611161521374_UserOrders.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
