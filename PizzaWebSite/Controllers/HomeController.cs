@@ -6,16 +6,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PizzaWebSite.Models;
+using PizzaWebSite.Models.PizzaCart;
+using System.Net;
 
 namespace PizzaWebSite.Controllers {
     public class HomeController : Controller {
 
-        
+        private Models.PizzaCart.PizzaOrderContext db = new Models.PizzaCart.PizzaOrderContext();
 
         public ActionResult Index() {
-
-
-            return View();
+            return View(db.Pizzas.ToList());
         }
 
         public ActionResult About() {
@@ -31,11 +31,20 @@ namespace PizzaWebSite.Controllers {
         }
 
         [Authorize]
-        public ActionResult ViewTest()
+        public ActionResult PizzaCustomise(int? id)
         {
-            ViewBag.Message = "Your test view page.";
+            ViewBag.Message = "Customise Pizza.";
 
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Pizza pizza = db.Pizzas.Find(id);
+            if (pizza == null)
+            {
+                return HttpNotFound();
+            }
+            return View(pizza);
         }
     }
 }

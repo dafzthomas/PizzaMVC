@@ -39,6 +39,6 @@ namespace PizzaWebSite.Models
             return new ApplicationDbContext();
         }
 
-        
+        public System.Data.Entity.DbSet<PizzaWebSite.Models.PizzaCart.Pizza> Pizzas { get; set; }
     }
 }

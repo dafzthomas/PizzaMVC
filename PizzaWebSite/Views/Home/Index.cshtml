@@ -10,11 +10,40 @@
 </div>
 
 <div class="row">
-    @*@foreach (var pizza in Model)
+    @foreach (var pizza in Model)
     {
         <div class="col-md-4">
-            @Html.DisplayFor(pizzaModel => pizza.Name)
+            <h3>@Html.DisplayFor(modelItem => pizza.Name) (@Html.DisplayFor(modelItem => pizza.Size))</h3>
+            <p>Price: @Html.DisplayFor(modelItem => pizza.Price)</p>
+            <ul>
+                @foreach (var topping in pizza.Toppings.ToList())
+                {
+                    <li>@Html.DisplayFor(modelItem => topping.Name) </li>
+                }
+            </ul>
+            @Html.ActionLink("Customise", "PizzaCustomise", new { id = pizza.PizzaId })
         </div>
+    }
+
+    @*@foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Size)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.PizzaId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.PizzaId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.PizzaId })
+            </td>
+        </tr>
     }*@
+    
     
 </div>
