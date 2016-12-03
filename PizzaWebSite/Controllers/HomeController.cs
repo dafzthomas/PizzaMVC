@@ -8,29 +8,45 @@ using System.Web.Mvc;
 using PizzaWebSite.Models;
 using PizzaWebSite.Models.PizzaCart;
 using System.Net;
+using PizzaWebSite.Models.Helpers;
 
-namespace PizzaWebSite.Controllers {
-    public class HomeController : Controller {
+namespace PizzaWebSite.Controllers
+{
+    public class HomeController : Controller
+    {
 
         private Models.PizzaCart.PizzaOrderContext db = new Models.PizzaCart.PizzaOrderContext();
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             return View(db.Pizzas.ToList());
         }
 
-        public ActionResult About() {
-            ViewBag.Message = "Your application description page.";
+        public ActionResult Cart()
+        {
+
+            ViewBag.Cart = SessionHelper.Current.Cart;
+            ViewBag.OrderItems = SessionHelper.Current.Cart.OrderItems;
+
+
+            var Pizzas = new List<Pizza>();
+
+            if (ViewBag.OrderItems != null)
+            {
+                foreach (var item in ViewBag.OrderItems)
+                {
+                    Pizza pizza = db.Pizzas.Find(item.PizzaId);
+
+                    Pizzas.Add(pizza);
+                }
+            }
+            
+
+            ViewBag.Pizzas = Pizzas;
 
             return View();
         }
 
-        public ActionResult Contact() {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
-        [Authorize]
         public ActionResult PizzaCustomise(int? id)
         {
             ViewBag.Message = "Customise Pizza.";
@@ -45,6 +61,38 @@ namespace PizzaWebSite.Controllers {
                 return HttpNotFound();
             }
             return View(pizza);
+        }
+
+        [HttpPost]
+        public ActionResult Add([Bind(Include = "PizzaId, Toppings")] Pizza pizza)
+        {
+
+
+            OrderItem tempPizza = new OrderItem();
+            tempPizza.PizzaId = pizza.PizzaId;
+            tempPizza.Toppings = pizza.Toppings;
+
+            if (SessionHelper.Current.Cart.OrderItems == null)
+            {
+                SessionHelper.Current.Cart.OrderItems = new List<OrderItem>();
+            }
+
+            SessionHelper.Current.Cart.OrderItems.Add(tempPizza);
+
+
+
+            return RedirectToAction("Cart");
+
+        }
+
+        [HttpPost]
+        public ActionResult Remove([Bind(Include = "PizzaId")] OrderItem orderItem)
+        {
+            var itemToRemove = SessionHelper.Current.Cart.OrderItems.Single(r => r.PizzaId == orderItem.PizzaId);
+
+            SessionHelper.Current.Cart.OrderItems.Remove(itemToRemove);
+
+            return RedirectToAction("Cart");
         }
     }
 }

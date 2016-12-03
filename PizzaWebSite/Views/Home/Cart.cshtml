@@ -1,0 +1,40 @@
+﻿@using PizzaWebSite.Models.PizzaCart
+
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron">
+    <h1>Pizza Website</h1>
+    <p class="lead">Cart!</p>
+</div>
+
+<div class="row">
+    <h2>Order @ViewBag.Cart.OrderId </h2>
+            
+    @if (ViewBag.OrderItems != null)
+    {
+        foreach (Pizza orderItem in ViewBag.Pizzas)
+        {
+            <ul>
+                <li>@orderItem.Name</li>
+                <li>@orderItem.Size</li>
+                <li>@orderItem.Price</li>
+            </ul>
+            using (Html.BeginForm("Remove", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="PizzaId" value="@orderItem.PizzaId" />
+                <input type="submit" value="Remove" class="btn btn-default" />
+            }
+        }
+    }
+
+
+
+
+
+</div>
