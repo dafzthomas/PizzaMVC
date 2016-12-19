@@ -13,7 +13,7 @@
     @foreach (var pizza in Model)
     {
         <div class="col-md-4">
-            <h3>@Html.DisplayFor(modelItem => pizza.Name) (@Html.DisplayFor(modelItem => pizza.Size))</h3>
+            <h3>@Html.DisplayFor(modelItem => pizza.Name)</h3>
             <p>Price: @Html.DisplayFor(modelItem => pizza.Price)</p>
             <ul>
                 @foreach (var topping in pizza.Toppings.ToList())
@@ -21,29 +21,20 @@
                     <li>@Html.DisplayFor(modelItem => topping.Name) </li>
                 }
             </ul>
-            @Html.ActionLink("Customise", "PizzaCustomise", new { id = pizza.PizzaId })
+            
+            
+            @foreach (var pizzaSize in ViewBag.AllPizzas)
+            {
+                if (pizzaSize.Name == pizza.Name)
+                {
+
+                    @Html.ActionLink((string)pizzaSize.Size, "PizzaCustomise", new { id = pizzaSize.PizzaId }, new { @class = "btn btn-primary" })
+                }
+            }
+            
+
+
+            
         </div>
     }
-
-    @*@foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PizzaId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PizzaId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PizzaId })
-            </td>
-        </tr>
-    }*@
-    
-    
 </div>

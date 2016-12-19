@@ -9,17 +9,31 @@ using PizzaWebSite.Models;
 using PizzaWebSite.Models.PizzaCart;
 using System.Net;
 using PizzaWebSite.Models.Helpers;
+using Microsoft.AspNet.Identity;
 
 namespace PizzaWebSite.Controllers
 {
     public class HomeController : Controller
     {
 
-        private Models.PizzaCart.PizzaOrderContext db = new Models.PizzaCart.PizzaOrderContext();
-
         public ActionResult Index()
         {
-            return View(db.Pizzas.ToList());
+            List<string> TempPizzaNames = new List<string>();
+            List<Pizza> Pizzas = new List<Pizza>();
+
+            foreach(var pizza in DatabaseContextHelper.Db.Pizzas.ToList())
+            {
+                var pizzaFound = TempPizzaNames.Contains(pizza.Name);
+
+                if (pizzaFound == false)
+                {
+                    TempPizzaNames.Add(pizza.Name);
+                    Pizzas.Add(pizza);
+                }
+            }
+
+            ViewBag.AllPizzas = DatabaseContextHelper.Db.Pizzas.ToList();
+            return View(Pizzas);
         }
 
         public ActionResult Cart()
@@ -35,12 +49,12 @@ namespace PizzaWebSite.Controllers
             {
                 foreach (var item in ViewBag.OrderItems)
                 {
-                    Pizza pizza = db.Pizzas.Find(item.PizzaId);
+                    Pizza pizza = item.Pizza;
 
                     Pizzas.Add(pizza);
                 }
             }
-            
+
 
             ViewBag.Pizzas = Pizzas;
 
@@ -55,7 +69,7 @@ namespace PizzaWebSite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Pizza pizza = db.Pizzas.Find(id);
+            Pizza pizza = DatabaseContextHelper.Db.Pizzas.Find(id);
             if (pizza == null)
             {
                 return HttpNotFound();
@@ -63,14 +77,44 @@ namespace PizzaWebSite.Controllers
             return View(pizza);
         }
 
+        [Authorize]
+        public ActionResult Confirm()
+        {
+            ViewBag.Cart = SessionHelper.Current.Cart;
+            ViewBag.OrderItems = SessionHelper.Current.Cart.OrderItems;
+
+
+            var Pizzas = new List<Pizza>();
+
+            if (ViewBag.OrderItems != null)
+            {
+                foreach (var item in ViewBag.OrderItems)
+                {
+                    Pizza pizza = item.Pizza;
+
+                    Pizzas.Add(pizza);
+                }
+            }
+
+
+            ViewBag.Pizzas = Pizzas;
+
+            return View();
+        }
+
+        [Authorize]
+        public ActionResult Complete()
+        {
+            ViewBag.completedOrder = SessionHelper.Current.Cart;
+            SessionHelper.Current.Cart = new Order();
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Add([Bind(Include = "PizzaId, Toppings")] Pizza pizza)
         {
-
-
             OrderItem tempPizza = new OrderItem();
-            tempPizza.PizzaId = pizza.PizzaId;
-            tempPizza.Toppings = pizza.Toppings;
+            tempPizza.Pizza = DatabaseContextHelper.Db.Pizzas.Find(pizza.PizzaId);
 
             if (SessionHelper.Current.Cart.OrderItems == null)
             {
@@ -79,8 +123,6 @@ namespace PizzaWebSite.Controllers
 
             SessionHelper.Current.Cart.OrderItems.Add(tempPizza);
 
-
-
             return RedirectToAction("Cart");
 
         }
@@ -88,11 +130,23 @@ namespace PizzaWebSite.Controllers
         [HttpPost]
         public ActionResult Remove([Bind(Include = "PizzaId")] OrderItem orderItem)
         {
-            var itemToRemove = SessionHelper.Current.Cart.OrderItems.Single(r => r.PizzaId == orderItem.PizzaId);
+            var itemToRemove = SessionHelper.Current.Cart.OrderItems.Single(r => r.Pizza.PizzaId == orderItem.Pizza.PizzaId);
 
             SessionHelper.Current.Cart.OrderItems.Remove(itemToRemove);
 
             return RedirectToAction("Cart");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SubmitOrder()
+        {
+            SessionHelper.Current.Cart.UserId = User.Identity.GetUserId();
+
+            DatabaseContextHelper.Db.Orders.Add(SessionHelper.Current.Cart);
+            DatabaseContextHelper.Db.SaveChanges();
+
+            return RedirectToAction("Complete");
         }
     }
 }

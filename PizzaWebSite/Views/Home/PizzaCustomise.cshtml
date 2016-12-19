@@ -29,8 +29,10 @@
 
             <p>£@Model.Toppings.ToList()[0].Price per extra topping</p>
 
+            <h3>£@Model.Price</h3>
+
             <input type="hidden" name="PizzaId" value="@Html.DisplayFor(model => model.PizzaId)" />
-            <input type="submit" value="Add to Cart" class="btn btn-default" />
+            <input type="submit" value="Add to Cart" class="btn btn-success" />
 
         </div>
     }

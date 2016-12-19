@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Order Complete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.OrderTotal = 0;
+}
+
+
+<div class="jumbotron">
+    <h1>Pizza Website</h1>
+    <p class="lead">Order Complete!</p>
+</div>
+
+<div class="row">
+    <div class="col-md-10">
+
+        @foreach (var orderItem in ViewBag.completedOrder.OrderItems)
+        {
+            ViewBag.OrderTotal += orderItem.Pizza.Price;
+
+            <ul>
+                <li>@orderItem.Pizza.Name</li>
+                <li>@orderItem.Pizza.Size</li>
+                <li>£@orderItem.Pizza.Price</li>
+            </ul>
+        }
+
+        <h3>£@ViewBag.OrderTotal</h3>
+
+
+
+
+        
+    </div>
+</div>

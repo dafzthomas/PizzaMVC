@@ -198,7 +198,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\PizzasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -214,8 +213,18 @@
     <Compile Include="Migrations\201611161521374_UserOrders.Designer.cs">
       <DependentUpon>201611161521374_UserOrders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612071643279_userid-to-string.cs" />
+    <Compile Include="Migrations\201612071643279_userid-to-string.Designer.cs">
+      <DependentUpon>201612071643279_userid-to-string.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612081723352_updated-orderitem.cs" />
+    <Compile Include="Migrations\201612081723352_updated-orderitem.Designer.cs">
+      <DependentUpon>201612081723352_updated-orderitem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Helpers\DatabaseContextHelper.cs" />
+    <Compile Include="Models\Helpers\DealsHelper.cs" />
     <Compile Include="Models\Helpers\SessionHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -284,12 +293,9 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\PizzaCustomise.cshtml" />
-    <Content Include="Views\Pizzas\Create.cshtml" />
-    <Content Include="Views\Pizzas\Delete.cshtml" />
-    <Content Include="Views\Pizzas\Details.cshtml" />
-    <Content Include="Views\Pizzas\Edit.cshtml" />
-    <Content Include="Views\Pizzas\Index.cshtml" />
     <Content Include="Views\Home\Cart.cshtml" />
+    <Content Include="Views\Home\Complete.cshtml" />
+    <Content Include="Views\Home\Confirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -311,6 +317,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611161521374_UserOrders.resx">
       <DependentUpon>201611161521374_UserOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612071643279_userid-to-string.resx">
+      <DependentUpon>201612071643279_userid-to-string.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612081723352_updated-orderitem.resx">
+      <DependentUpon>201612081723352_updated-orderitem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

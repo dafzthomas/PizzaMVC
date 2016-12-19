@@ -23,12 +23,33 @@
             }
             ]
         </dd>
-        <dt>External Logins:</dt>
-        <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
-        </dd>
     </dl>
+
+    <h3>Orders</h3>
+
+    @foreach (var order in ViewBag.Orders)
+    {
+        var orderTotal = 0;
+
+        <p>@order.OrderId</p>
+
+        if (order.OrderItems.Count != 0)
+        {
+            foreach (var item in order.OrderItems)
+            {
+                orderTotal += item.Pizza.Price;
+                <ul>
+                    <li>@item.Pizza.Name</li>
+                    <li>@item.Pizza.Size</li>
+                    <li>£@item.Pizza.Price</li>
+                </ul>
+            }
+        }
+
+        <p>Order Total: £@orderTotal</p>
+
+        <hr />
+    }
 
 
 </div>

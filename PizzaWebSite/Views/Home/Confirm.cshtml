@@ -1,0 +1,43 @@
+﻿@using PizzaWebSite.Models.PizzaCart
+
+@{
+    ViewBag.Title = "Confirm Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.OrderTotal = 0; 
+}
+
+
+<div class="jumbotron">
+    <h1>Pizza Website</h1>
+    <p class="lead">Confirm Order!</p>
+</div>
+
+<div class="row">
+    <div class="col-md-10">
+
+
+        @foreach (Pizza orderItem in ViewBag.Pizzas)
+        {
+            ViewBag.OrderTotal += orderItem.Price;
+
+            <ul>
+                <li>@orderItem.Name</li>
+                <li>@orderItem.Size</li>
+                <li>£@orderItem.Price</li>
+            </ul>
+        }
+
+        <h3>£@ViewBag.OrderTotal</h3>
+
+
+
+        @using (Html.BeginForm("SubmitOrder", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+
+            @Html.AntiForgeryToken()
+
+
+        <input type="submit" value="Submit" class="btn btn-default" />
+        }
+    </div>
+</div>

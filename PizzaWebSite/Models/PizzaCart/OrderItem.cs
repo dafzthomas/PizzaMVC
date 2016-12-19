@@ -6,9 +6,9 @@ namespace PizzaWebSite.Models.PizzaCart
     {
         public int OrderItemId { get; set; }
 
-        public int PizzaId { get; set; }
+        public Pizza Pizza { get; set; }
 
-        public virtual List<Topping> Toppings { get; set; }
+        public List<Topping> Toppings { get; set; }
 
         public int UserId { get; set; }
     }
