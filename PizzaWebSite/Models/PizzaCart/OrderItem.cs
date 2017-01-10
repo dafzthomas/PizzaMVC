@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PizzaWebSite.Models.PizzaCart
 {
@@ -10,6 +11,13 @@ namespace PizzaWebSite.Models.PizzaCart
 
         public List<Topping> Toppings { get; set; }
 
+        public List<Topping> ExtraToppings { get; set; }
+
         public int UserId { get; set; }
+
+        public static implicit operator OrderItem(string v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

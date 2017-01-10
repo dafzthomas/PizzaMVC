@@ -29,6 +29,19 @@
 
             <p>£@Model.Toppings.ToList()[0].Price per extra topping</p>
 
+            @foreach (var topping in ViewBag.AllToppings)
+            {
+
+                if (topping.Size == Model.Size)
+                {
+                    <div>
+                        <label>@topping.Name</label>
+                        <input type="checkbox" name="ToppingId" value="@topping.ToppingId" />
+                    </div>
+                }
+
+            }
+
             <h3>£@Model.Price</h3>
 
             <input type="hidden" name="PizzaId" value="@Html.DisplayFor(model => model.PizzaId)" />

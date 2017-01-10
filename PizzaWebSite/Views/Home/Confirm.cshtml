@@ -1,4 +1,4 @@
-﻿@using PizzaWebSite.Models.PizzaCart
+﻿@model IEnumerable<PizzaWebSite.Models.PizzaCart.OrderItem>
 
 @{
     ViewBag.Title = "Confirm Order";
@@ -16,14 +16,20 @@
     <div class="col-md-10">
 
 
-        @foreach (Pizza orderItem in ViewBag.Pizzas)
+        @foreach (var orderItem in Model)
         {
-            ViewBag.OrderTotal += orderItem.Price;
+            ViewBag.OrderTotal += orderItem.Pizza.Price;
 
+            <h3>Pizza: @orderItem.Pizza.Name</h3>
+            <p>Size: @orderItem.Pizza.Size</p>
+            <p>Price: £@orderItem.Pizza.Price</p>
+
+            <p>Toppings</p>
             <ul>
-                <li>@orderItem.Name</li>
-                <li>@orderItem.Size</li>
-                <li>£@orderItem.Price</li>
+                @foreach (var topping in orderItem.Pizza.Toppings.ToList())
+                {
+                    <li>@topping.Name</li>
+                }
             </ul>
         }
 
@@ -33,11 +39,9 @@
 
         @using (Html.BeginForm("SubmitOrder", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
-
             @Html.AntiForgeryToken()
 
-
-        <input type="submit" value="Submit" class="btn btn-default" />
+            <input type="submit" value="Submit" class="btn btn-default" />
         }
     </div>
 </div>

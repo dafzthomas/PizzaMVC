@@ -1,4 +1,4 @@
-﻿@using PizzaWebSite.Models.PizzaCart
+﻿@model IEnumerable<PizzaWebSite.Models.PizzaCart.OrderItem>
 
 @{
     ViewBag.Title = "Cart";
@@ -16,35 +16,35 @@
     <div class="col-md-10">
         <h2>Cart</h2>
 
-        @if (ViewBag.OrderItems != null)
+       
+        @foreach (var orderItem in Model)
         {
-            foreach (Pizza orderItem in ViewBag.Pizzas)
-            {
-                ViewBag.OrderTotal += orderItem.Price;
+            ViewBag.OrderTotal += orderItem.Pizza.Price;
 
-                <ul>
-                    <li>@orderItem.Name</li>
-                    <li>@orderItem.Size</li>
-                    <li>£@orderItem.Price</li>
-                </ul>
-                using (Html.BeginForm("Remove", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            <h3>Pizza: @orderItem.Pizza.Name</h3>
+            <p>Size: @orderItem.Pizza.Size</p>
+            <p>Price: £@orderItem.Pizza.Price</p>
+
+            <p>Toppings</p>
+            <ul>
+                @foreach (var topping in orderItem.Pizza.Toppings.ToList())
                 {
-
-                    @Html.AntiForgeryToken()
-
-                    <input type="hidden" name="Pizza" value="@orderItem" />
-                    <input type="submit" value="Remove" class="btn btn-default" />
+                    <li>@topping.Name</li>
                 }
+            </ul>
+            using (Html.BeginForm("Remove", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="PizzaId" value="@orderItem.Pizza.PizzaId" />
+                <input type="submit" value="Remove" class="btn btn-danger" />
             }
-
-            <h3>£@ViewBag.OrderTotal</h3>
-
-            @Html.ActionLink("Continue", "Confirm");
         }
 
+        <h3>£@ViewBag.OrderTotal</h3>
 
-
-
+        @Html.ActionLink("Continue", "Confirm")
+        
 
     </div>
 </div>

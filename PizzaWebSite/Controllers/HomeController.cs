@@ -38,32 +38,19 @@ namespace PizzaWebSite.Controllers
 
         public ActionResult Cart()
         {
-
-            ViewBag.Cart = SessionHelper.Current.Cart;
-            ViewBag.OrderItems = SessionHelper.Current.Cart.OrderItems;
-
-
-            var Pizzas = new List<Pizza>();
-
-            if (ViewBag.OrderItems != null)
+            if (SessionHelper.Current.Cart.OrderItems.ToList().Count > 0)
             {
-                foreach (var item in ViewBag.OrderItems)
-                {
-                    Pizza pizza = item.Pizza;
-
-                    Pizzas.Add(pizza);
-                }
+                return View(SessionHelper.Current.Cart.OrderItems.ToList());
+            } else
+            {
+                return RedirectToAction("Index");
             }
-
-
-            ViewBag.Pizzas = Pizzas;
-
-            return View();
         }
 
         public ActionResult PizzaCustomise(int? id)
         {
             ViewBag.Message = "Customise Pizza.";
+            ViewBag.AllToppings = DatabaseContextHelper.Db.Toppings.ToList();
 
             if (id == null)
             {
@@ -80,26 +67,14 @@ namespace PizzaWebSite.Controllers
         [Authorize]
         public ActionResult Confirm()
         {
-            ViewBag.Cart = SessionHelper.Current.Cart;
-            ViewBag.OrderItems = SessionHelper.Current.Cart.OrderItems;
-
-
-            var Pizzas = new List<Pizza>();
-
-            if (ViewBag.OrderItems != null)
+            if (SessionHelper.Current.Cart.OrderItems.ToList().Count > 0)
             {
-                foreach (var item in ViewBag.OrderItems)
-                {
-                    Pizza pizza = item.Pizza;
-
-                    Pizzas.Add(pizza);
-                }
+                return View(SessionHelper.Current.Cart.OrderItems.ToList());
             }
-
-
-            ViewBag.Pizzas = Pizzas;
-
-            return View();
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         [Authorize]
@@ -111,7 +86,7 @@ namespace PizzaWebSite.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add([Bind(Include = "PizzaId, Toppings")] Pizza pizza)
+        public ActionResult Add([Bind(Include = "PizzaId, ToppingId")] Pizza pizza, List<Topping> toppings)
         {
             OrderItem tempPizza = new OrderItem();
             tempPizza.Pizza = DatabaseContextHelper.Db.Pizzas.Find(pizza.PizzaId);
@@ -121,6 +96,10 @@ namespace PizzaWebSite.Controllers
                 SessionHelper.Current.Cart.OrderItems = new List<OrderItem>();
             }
 
+            var test = pizza;
+
+            //tempPizza.ExtraToppings.Add(pizza.Toppings);
+
             SessionHelper.Current.Cart.OrderItems.Add(tempPizza);
 
             return RedirectToAction("Cart");
@@ -128,9 +107,9 @@ namespace PizzaWebSite.Controllers
         }
 
         [HttpPost]
-        public ActionResult Remove([Bind(Include = "PizzaId")] OrderItem orderItem)
+        public ActionResult Remove([Bind(Include = "PizzaId")] Pizza pizza)
         {
-            var itemToRemove = SessionHelper.Current.Cart.OrderItems.Single(r => r.Pizza.PizzaId == orderItem.Pizza.PizzaId);
+            var itemToRemove = SessionHelper.Current.Cart.OrderItems.Single(r => r.Pizza.PizzaId == pizza.PizzaId);
 
             SessionHelper.Current.Cart.OrderItems.Remove(itemToRemove);
 
@@ -142,6 +121,11 @@ namespace PizzaWebSite.Controllers
         public ActionResult SubmitOrder()
         {
             SessionHelper.Current.Cart.UserId = User.Identity.GetUserId();
+
+            foreach(var item in SessionHelper.Current.Cart.OrderItems)
+            {
+                SessionHelper.Current.Cart.Price += item.Pizza.Price;
+            }
 
             DatabaseContextHelper.Db.Orders.Add(SessionHelper.Current.Cart);
             DatabaseContextHelper.Db.SaveChanges();

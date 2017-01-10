@@ -221,6 +221,14 @@
     <Compile Include="Migrations\201612081723352_updated-orderitem.Designer.cs">
       <DependentUpon>201612081723352_updated-orderitem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612221357262_added-order-total-to-db.cs" />
+    <Compile Include="Migrations\201612221357262_added-order-total-to-db.Designer.cs">
+      <DependentUpon>201612221357262_added-order-total-to-db.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612221432325_added-ExtraToppings-list-to-orderitem.cs" />
+    <Compile Include="Migrations\201612221432325_added-ExtraToppings-list-to-orderitem.Designer.cs">
+      <DependentUpon>201612221432325_added-ExtraToppings-list-to-orderitem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Helpers\DatabaseContextHelper.cs" />
@@ -323,6 +331,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612081723352_updated-orderitem.resx">
       <DependentUpon>201612081723352_updated-orderitem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612221357262_added-order-total-to-db.resx">
+      <DependentUpon>201612221357262_added-order-total-to-db.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612221432325_added-ExtraToppings-list-to-orderitem.resx">
+      <DependentUpon>201612221432325_added-ExtraToppings-list-to-orderitem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
