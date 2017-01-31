@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PizzaWebSite.Models.PizzaCart {
     public class Topping {
+
+        [Key]
         public int ToppingId { get; set; }
 
         [Required]

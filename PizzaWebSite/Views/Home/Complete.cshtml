@@ -13,19 +13,65 @@
 
 <div class="row">
     <div class="col-md-10">
+        <h2>Your order!</h2>
 
-        @foreach (var orderItem in ViewBag.completedOrder.OrderItems)
+        @foreach (var orderItem in ViewBag.Order.OrderItems)
         {
-            ViewBag.OrderTotal += orderItem.Pizza.Price;
+            ViewBag.OrderTotal += orderItem.Price;
 
+            <h3>Pizza: @orderItem.Pizza.Name</h3>
+            <p>Size: @orderItem.Pizza.Size</p>
+            <p>Base Pizza Price: £@orderItem.Pizza.Price</p>
+
+            <p>Toppings</p>
             <ul>
-                <li>@orderItem.Pizza.Name</li>
-                <li>@orderItem.Pizza.Size</li>
-                <li>£@orderItem.Pizza.Price</li>
+                @foreach (var topping in orderItem.Pizza.Toppings)
+                {
+                    <li>@topping.Name</li>
+                }
             </ul>
+
+            <p>Extra Selected Toppings</p>
+            <ul>
+                @if (orderItem.ExtraToppings.Count > 0)
+                {
+                    foreach (var topping in orderItem.ExtraToppings)
+                    {
+                        <li>@topping.Name (£@topping.Price)</li>
+                    }
+                }
+                else
+                {
+                    <li>None</li>
+                }
+            </ul>
+
+            <h4>Price: £@orderItem.Price</h4>
         }
 
-        <h3>£@ViewBag.OrderTotal</h3>
+        @if (ViewBag.Order.Discount > 0)
+        {
+            <p>Voucher applied.</p>
+            <h3>Order total: <span style="text-decoration: line-through">£@ViewBag.OrderTotal</span> - £@(ViewBag.OrderTotal - ViewBag.Order.Discount)</h3>
+        }
+        else
+        {
+            <h3>£@ViewBag.OrderTotal</h3>
+        }
+
+        @if (ViewBag.Order.Delivery)
+        {
+            <p>Order for delivery</p>
+
+            <p>Address: @ViewBag.User.Address</p>
+            <p>Postcode: @ViewBag.User.PostCode</p>
+            <p>Phone number: @ViewBag.User.PhoneNumber</p>
+
+        }
+        else
+        {
+            <p>Order for collection</p>
+        }
 
 
 

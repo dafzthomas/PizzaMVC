@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PizzaWebSite;
 using PizzaWebSite.Controllers;
+using PizzaWebSite.Models.PizzaCart;
+using PizzaWebSite.Models.Helpers;
 
 namespace PizzaWebSite.Tests.Controllers {
     [TestClass]

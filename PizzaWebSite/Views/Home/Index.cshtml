@@ -22,19 +22,13 @@
                 }
             </ul>
             
-            
             @foreach (var pizzaSize in ViewBag.AllPizzas)
             {
                 if (pizzaSize.Name == pizza.Name)
                 {
-
                     @Html.ActionLink((string)pizzaSize.Size, "PizzaCustomise", new { id = pizzaSize.PizzaId }, new { @class = "btn btn-primary" })
                 }
             }
-            
-
-
-            
         </div>
     }
 </div>

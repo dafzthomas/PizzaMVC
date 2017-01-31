@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PizzaWebSite.Models;
 using PizzaWebSite.Models.PizzaCart;
+using PizzaWebSite.Models.Helpers;
 
 namespace PizzaWebSite.Controllers
 {
@@ -68,7 +69,7 @@ namespace PizzaWebSite.Controllers
 
             var userId = User.Identity.GetUserId();
 
-            ViewBag.Orders = db.Orders.Where(e => e.UserId == userId);
+            ViewBag.Orders = db.Orders.Where(e => e.UserId == userId).ToList();
             ViewBag.Pizzas = db.Pizzas.ToList();
 
             var model = new IndexViewModel
@@ -229,7 +230,7 @@ namespace PizzaWebSite.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 

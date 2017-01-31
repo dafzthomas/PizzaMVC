@@ -10,6 +10,7 @@ using PizzaWebSite.Models.PizzaCart;
 using System.Net;
 using PizzaWebSite.Models.Helpers;
 using Microsoft.AspNet.Identity;
+using System.Security.Principal;
 
 namespace PizzaWebSite.Controllers
 {
@@ -20,8 +21,9 @@ namespace PizzaWebSite.Controllers
         {
             List<string> TempPizzaNames = new List<string>();
             List<Pizza> Pizzas = new List<Pizza>();
+            ViewBag.AllPizzas = DatabaseContextHelper.Db.Pizzas.ToList();
 
-            foreach(var pizza in DatabaseContextHelper.Db.Pizzas.ToList())
+            foreach (var pizza in ViewBag.AllPizzas)
             {
                 var pizzaFound = TempPizzaNames.Contains(pizza.Name);
 
@@ -31,76 +33,71 @@ namespace PizzaWebSite.Controllers
                     Pizzas.Add(pizza);
                 }
             }
-
-            ViewBag.AllPizzas = DatabaseContextHelper.Db.Pizzas.ToList();
+            
             return View(Pizzas);
         }
 
-        public ActionResult Cart()
+        public ActionResult Cart(int? id)
         {
-            if (SessionHelper.Current.Cart.OrderItems.ToList().Count > 0)
+            if (id != null)
             {
-                return View(SessionHelper.Current.Cart.OrderItems.ToList());
-            } else
-            {
-                return RedirectToAction("Index");
+                CartHelper.ReorderOrder(Convert.ToInt32(id), SessionHelper.Current.Cart);
             }
-        }
 
-        public ActionResult PizzaCustomise(int? id)
-        {
-            ViewBag.Message = "Customise Pizza.";
-            ViewBag.AllToppings = DatabaseContextHelper.Db.Toppings.ToList();
+            ViewBag.Order = SessionHelper.Current.Cart;
+            ViewBag.User = DatabaseContextHelper.Db.Users.Find(User.Identity.GetUserId());
 
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Pizza pizza = DatabaseContextHelper.Db.Pizzas.Find(id);
-            if (pizza == null)
-            {
-                return HttpNotFound();
-            }
-            return View(pizza);
+            return View(SessionHelper.Current.Cart.OrderItems.ToList());
         }
 
         [Authorize]
         public ActionResult Confirm()
         {
-            if (SessionHelper.Current.Cart.OrderItems.ToList().Count > 0)
-            {
-                return View(SessionHelper.Current.Cart.OrderItems.ToList());
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            ViewBag.Order = SessionHelper.Current.Cart;
+            ViewBag.User = DatabaseContextHelper.Db.Users.Find(User.Identity.GetUserId());
+
+            return View(SessionHelper.Current.Cart.OrderItems.ToList());
         }
 
         [Authorize]
         public ActionResult Complete()
         {
-            ViewBag.completedOrder = SessionHelper.Current.Cart;
-            SessionHelper.Current.Cart = new Order();
+            ViewBag.Order = SessionHelper.Current.Cart;
+            ViewBag.User = DatabaseContextHelper.Db.Users.Find(User.Identity.GetUserId());
+
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Add([Bind(Include = "PizzaId, ToppingId")] Pizza pizza, List<Topping> toppings)
+        public ActionResult PizzaCustomise(int? id)
         {
-            OrderItem tempPizza = new OrderItem();
-            tempPizza.Pizza = DatabaseContextHelper.Db.Pizzas.Find(pizza.PizzaId);
+            ViewBag.Message = "Customise Pizza.";
+            ViewBag.AllToppings = new List<Topping>();
 
-            if (SessionHelper.Current.Cart.OrderItems == null)
+            var allToppings = DatabaseContextHelper.Db.Toppings.ToList();
+            Pizza pizza = DatabaseContextHelper.Db.Pizzas.Find(id);
+
+            foreach(var topping in allToppings)
             {
-                SessionHelper.Current.Cart.OrderItems = new List<OrderItem>();
+                if (pizza.Size == topping.Size)
+                {
+                    ViewBag.AllToppings.Add(topping);
+                }
             }
 
-            var test = pizza;
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-            //tempPizza.ExtraToppings.Add(pizza.Toppings);
+            return View(pizza);
+        }
 
-            SessionHelper.Current.Cart.OrderItems.Add(tempPizza);
+        [HttpPost]
+        public ActionResult Add(Pizza pizza, FormCollection form)
+        {
+            string selectedToppings = form["ToppingId"];
+
+            CartHelper.Add(pizza.PizzaId, selectedToppings, SessionHelper.Current.Cart);
 
             return RedirectToAction("Cart");
 
@@ -109,26 +106,31 @@ namespace PizzaWebSite.Controllers
         [HttpPost]
         public ActionResult Remove([Bind(Include = "PizzaId")] Pizza pizza)
         {
-            var itemToRemove = SessionHelper.Current.Cart.OrderItems.Single(r => r.Pizza.PizzaId == pizza.PizzaId);
-
-            SessionHelper.Current.Cart.OrderItems.Remove(itemToRemove);
-
+            CartHelper.Remove(pizza, SessionHelper.Current.Cart);
             return RedirectToAction("Cart");
+        }
+
+        [HttpPost]
+        public ActionResult ApplyDelivery([Bind(Include = "Delivery")] bool Delivery)
+        {
+            CartHelper.ApplyDelivery(Delivery, SessionHelper.Current.Cart);
+            return RedirectToAction("Cart");
+        }
+
+        [HttpPost]
+        public ActionResult CheckDeal([Bind(Include = "voucher")] string voucher)
+        {
+            CartHelper.AddDealToCart(voucher, SessionHelper.Current.Cart);
+            return RedirectToAction("Confirm");
         }
 
         [Authorize]
         [HttpPost]
         public ActionResult SubmitOrder()
         {
-            SessionHelper.Current.Cart.UserId = User.Identity.GetUserId();
-
-            foreach(var item in SessionHelper.Current.Cart.OrderItems)
-            {
-                SessionHelper.Current.Cart.Price += item.Pizza.Price;
-            }
-
-            DatabaseContextHelper.Db.Orders.Add(SessionHelper.Current.Cart);
-            DatabaseContextHelper.Db.SaveChanges();
+            string userId = User.Identity.GetUserId();
+            CartHelper.Submit(userId, SessionHelper.Current.Cart);
+            CartHelper.ResetCart(SessionHelper.Current.Cart);
 
             return RedirectToAction("Complete");
         }

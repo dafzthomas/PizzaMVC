@@ -29,24 +29,56 @@
 
     @foreach (var order in ViewBag.Orders)
     {
-        var orderTotal = 0;
-
-        <p>@order.OrderId</p>
-
-        if (order.OrderItems.Count != 0)
+        if (order.OrderItems.Count > 0)
         {
-            foreach (var item in order.OrderItems)
+            foreach (var orderItem in order.OrderItems)
             {
-                orderTotal += item.Pizza.Price;
+
+                <h3>Pizza: @orderItem.Pizza.Name</h3>
+                <p>Size: @orderItem.Pizza.Size</p>
+                <p>Base Pizza Price: £@orderItem.Pizza.Price</p>
+
+                <p>Toppings</p>
                 <ul>
-                    <li>@item.Pizza.Name</li>
-                    <li>@item.Pizza.Size</li>
-                    <li>£@item.Pizza.Price</li>
+                    @foreach (var topping in orderItem.Pizza.Toppings)
+                    {
+                        <li>@topping.Name</li>
+                    }
                 </ul>
+
+                <p>Extra Selected Toppings</p>
+                <ul>
+                    @if (orderItem.ExtraToppings != null)
+                    {
+                        foreach (var topping in orderItem.ExtraToppings)
+                        {
+                            <li>@topping.Name (£@topping.Price)</li>
+                        }
+                    }
+                    else
+                    {
+                        <li>None</li>
+                    }
+                </ul>
+
+                <h4>Price: £@orderItem.Price</h4>
+            }
+
+            if (order.Discount > 0)
+            {
+                <p>Voucher applied.</p>
+                <h3>Order total: <span style="text-decoration: line-through">£@order.Price</span> - £@(order.Price - order.Discount)</h3>
+            }
+            else
+            {
+                <h3>Order Total: £@order.Price</h3>
             }
         }
 
-        <p>Order Total: £@orderTotal</p>
+
+
+
+        @Html.ActionLink("Re-order this", "Cart", "Home", new { id = order.OrderId }, new { @class = "btn btn-primary" })
 
         <hr />
     }

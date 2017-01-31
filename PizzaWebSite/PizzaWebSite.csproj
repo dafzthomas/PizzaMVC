@@ -196,6 +196,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -229,10 +230,30 @@
     <Compile Include="Migrations\201612221432325_added-ExtraToppings-list-to-orderitem.Designer.cs">
       <DependentUpon>201612221432325_added-ExtraToppings-list-to-orderitem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701111518031_added-price-to-OrderItem.cs" />
+    <Compile Include="Migrations\201701111518031_added-price-to-OrderItem.Designer.cs">
+      <DependentUpon>201701111518031_added-price-to-OrderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701141352286_didnt-need-toppings-on-order-item.cs" />
+    <Compile Include="Migrations\201701141352286_didnt-need-toppings-on-order-item.Designer.cs">
+      <DependentUpon>201701141352286_didnt-need-toppings-on-order-item.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701212129117_addedKeys.cs" />
+    <Compile Include="Migrations\201701212129117_addedKeys.Designer.cs">
+      <DependentUpon>201701212129117_addedKeys.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701221432255_added-items-to-order.cs" />
+    <Compile Include="Migrations\201701221432255_added-items-to-order.Designer.cs">
+      <DependentUpon>201701221432255_added-items-to-order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701221744213_added-currentVoucher-to-order.cs" />
+    <Compile Include="Migrations\201701221744213_added-currentVoucher-to-order.Designer.cs">
+      <DependentUpon>201701221744213_added-currentVoucher-to-order.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Helpers\CartHelper.cs" />
     <Compile Include="Models\Helpers\DatabaseContextHelper.cs" />
-    <Compile Include="Models\Helpers\DealsHelper.cs" />
     <Compile Include="Models\Helpers\SessionHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -307,6 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Cart\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -337,6 +359,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612221432325_added-ExtraToppings-list-to-orderitem.resx">
       <DependentUpon>201612221432325_added-ExtraToppings-list-to-orderitem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701111518031_added-price-to-OrderItem.resx">
+      <DependentUpon>201701111518031_added-price-to-OrderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701141352286_didnt-need-toppings-on-order-item.resx">
+      <DependentUpon>201701141352286_didnt-need-toppings-on-order-item.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701212129117_addedKeys.resx">
+      <DependentUpon>201701212129117_addedKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701221432255_added-items-to-order.resx">
+      <DependentUpon>201701221432255_added-items-to-order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701221744213_added-currentVoucher-to-order.resx">
+      <DependentUpon>201701221744213_added-currentVoucher-to-order.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

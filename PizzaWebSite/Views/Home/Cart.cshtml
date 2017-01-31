@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Cart";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
     ViewBag.OrderTotal = 0;
 }
 
@@ -19,11 +18,11 @@
        
         @foreach (var orderItem in Model)
         {
-            ViewBag.OrderTotal += orderItem.Pizza.Price;
+            ViewBag.OrderTotal += orderItem.Price;
 
             <h3>Pizza: @orderItem.Pizza.Name</h3>
             <p>Size: @orderItem.Pizza.Size</p>
-            <p>Price: £@orderItem.Pizza.Price</p>
+            <p>Base Pizza Price: £@orderItem.Pizza.Price</p>
 
             <p>Toppings</p>
             <ul>
@@ -32,6 +31,24 @@
                     <li>@topping.Name</li>
                 }
             </ul>
+
+            <p>Extra Selected Toppings</p>
+            <ul>
+                @if (orderItem.ExtraToppings.Count > 0)
+                {
+                    foreach (var topping in orderItem.ExtraToppings)
+                    {
+                        <li>@topping.Name (£@topping.Price)</li>
+                    }
+                }
+                else
+                {
+                    <li>None</li>
+                }
+            </ul>
+
+            <h4>Price: £@orderItem.Price</h4>
+
             using (Html.BeginForm("Remove", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
@@ -41,9 +58,48 @@
             }
         }
 
-        <h3>£@ViewBag.OrderTotal</h3>
+        <h3>Order Total: £@ViewBag.OrderTotal</h3>
 
-        @Html.ActionLink("Continue", "Confirm")
+        @using (Html.BeginForm("ApplyDelivery", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="Delivery" value="true" />
+            <input type="submit" value="Deliver" class="btn btn-danger" />
+        }
+
+        @using (Html.BeginForm("ApplyDelivery", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="Delivery" value="false" />
+            <input type="submit" value="Collection" class="btn btn-danger" />
+        }
+
+        @if (ViewBag.Order.Delivery)
+        {
+            <p>Order for delivery</p>
+
+            <p>Address: @ViewBag.User.Address</p>
+            <p>Postcode: @ViewBag.User.PostCode</p>
+            <p>Phone number: @ViewBag.User.PhoneNumber</p>
+
+        }
+        else
+        {
+            <p>Order for collection</p>
+        }
+
+
+
+        @if (ViewBag.OrderTotal > 0)
+        {
+            @Html.ActionLink("Continue", "Confirm")
+        }
+        
+        
+        
+
         
 
     </div>

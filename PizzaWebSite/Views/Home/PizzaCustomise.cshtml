@@ -31,13 +31,16 @@
 
             @foreach (var topping in ViewBag.AllToppings)
             {
+                var index = Model.Toppings.ToList().FindIndex(item => item.ToppingId == topping.ToppingId);
 
-                if (topping.Size == Model.Size)
+                if (topping.Size == Model.Size && index == -1)
                 {
                     <div>
                         <label>@topping.Name</label>
                         <input type="checkbox" name="ToppingId" value="@topping.ToppingId" />
                     </div>
+
+                    
                 }
 
             }

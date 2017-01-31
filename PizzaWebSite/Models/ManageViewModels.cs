@@ -2,6 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using PizzaWebSite.Models.PizzaCart;
+using PizzaWebSite.Models.Helpers;
+using System.Linq;
 
 namespace PizzaWebSite.Models
 {

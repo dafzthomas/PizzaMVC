@@ -10,7 +10,7 @@ namespace PizzaWebSite.Models.Helpers
 {
     class SessionHelper
     {
-        private SessionHelper()
+        public SessionHelper()
         {
             Cart = new Order();
         }
